@@ -427,11 +427,13 @@ paths:
       parameters:
         - name: sportId
           in: query
+          description: The sport id to retrieve the fixutres for.
           required: true
           type: integer
           format: int32
         - name: leagueIds
           in: query
+          description: The leagueIds array may contain a list of comma separated league ids.
           required: false
           type: array
           items:
@@ -440,6 +442,7 @@ paths:
           collectionFormat: multi
         - name: since
           in: query
+          description: This is used to receive incremental updates. Use the value of last from previous response.
           required: false
           type: integer
           format: int64
@@ -494,11 +497,13 @@ paths:
         - name: sportId
           in: query
           required: true
+          description: The sport id to retrieve the fixutres for.
           type: integer
           format: int32
         - name: leagueIds
           in: query
           required: false
+          description: The leagueIds array may contain a list of comma separated league ids.
           type: array
           items:
             type: integer
@@ -507,6 +512,7 @@ paths:
         - name: since
           in: query
           required: false
+          description: This is used to receive incremental updates. Use the value of last from previous response.
           type: integer
           format: int64
       responses:
