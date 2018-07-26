@@ -16,7 +16,7 @@ info:
     `Authorization: Basic U03MyOT23YbzMDc6d3c3O1DQ1`
   x-logo:
     url: 'https://avatars2.githubusercontent.com/u/31601407?s=400&u=f3c6e1cfc8a26665e4a4df6d8da4a7ee527aeceb&v=4'
-host: api.pinnacle.com
+host: api.ps3838.com
 schemes:
   - https
 security:
@@ -1147,13 +1147,13 @@ paths:
           schema:
             $ref: '#/definitions/ExtendedErrorResponse'
       deprecated: false
-  /v2/sports:
+  /v1/sports:
     get:
       tags:
         - Others  
-      summary: Get Sports - v2
+      summary: Get Sports - v1
       description: Returns all sports with the status whether they currently have lines or not.
-      operationId: Sports_V2_Get
+      operationId: Sports_V1_Get
       consumes: []
       produces:
         - application/json
@@ -1163,6 +1163,34 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SportsResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/LinesErrorResponse'
+  /v3/sports:
+    get:
+      tags:
+        - Others  
+      summary: Get Sports - v3
+      description: Returns all sports with the status whether they currently have lines or not.
+      operationId: Sports_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SportsResponseV3'
         '401':
           description: Unauthorized
           schema:
@@ -2748,6 +2776,27 @@ definitions:
         items:
           $ref: '#/definitions/Sport'
   Sport:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Sport Id.
+      name:
+        type: string
+        description: Sport name.
+      hasOfferings:
+        type: boolean
+        description: Whether the sport currently has events or specials.
+  SportsResponseV3:
+    type: object
+    properties:
+      sports:
+        type: array
+        description: Sports container.
+        items:
+          $ref: '#/definitions/SportV3'
+  SportV3:
     type: object
     properties:
       id:
