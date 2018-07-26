@@ -27,7 +27,7 @@ paths:
     post:
       tags:
         - Place Bets
-      summary: Place straight bet v1
+      summary: Place straight bet - v1
       description: Place straight bet v1
       operationId: Bets_Straight
       consumes:
@@ -113,7 +113,7 @@ paths:
     post:
       tags:
         - Place Bets
-      summary: Place parlay bet.
+      summary: Place parlay bet - v1
       operationId: Bets_Parlay
       consumes:
         - application/json
@@ -151,7 +151,7 @@ paths:
     post:
       tags:
         - Place Bets
-      summary: Place teaser bet.
+      summary: Place teaser bet - v1
       operationId: Bets_Teaser
       consumes:
         - application/json
@@ -189,7 +189,7 @@ paths:
     post:
       tags:
         - Place Bets
-      summary: Place specials bet.
+      summary: Place specials bet - v1
       operationId: Bets_Special
       consumes:
         - application/json
