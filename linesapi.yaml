@@ -59,6 +59,64 @@ paths:
           required: false
           type: integer
           format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FixturesResponseV1'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+  /v3/fixtures:
+    get:
+      tags:
+        - Fixtures
+      summary: Get Fixtures - v3
+      description: Returns all **non-settled** events for the given sport. Please note that it is possible that the event is in Get Fixtures response but not in Get Odds. This happens when the odds are not currently available for wagering. Please note that it is possible to receive the same exact response when using **since** parameter. This is rare and can be caused by internal updates of event properties.
+      operationId: Fixtures_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          description: The sport id to retrieve the fixutres for.
+          required: true
+          type: integer
+          format: int32
+        - name: leagueIds
+          in: query
+          description: The leagueIds array may contain a list of comma separated league ids.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int32
+          collectionFormat: multi
+        - name: isLive
+          in: query
+          description: To retrieve ONLY live events set the value to 1 (isLive=1). Missing or any other value will result in retrieval of events regardless of their Live status.
+          required: false
+          type: boolean
+        - name: since
+          in: query
+          description: This is used to receive incremental updates. Use the value of last from previous fixtures response. When since parameter is not provided, the fixtures are delayed up to 1 minute to encourage the use of the parameter.
+          required: false
+          type: integer
+          format: int64
         - name: eventIds
           in: query
           description: Comma separated list of event ids to filter by
@@ -72,7 +130,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/FixturesResponse'
+            $ref: '#/definitions/FixturesResponseV3'
         '400':
           description: BadRequest
           schema:
@@ -1162,7 +1220,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/SportsResponse'
+            $ref: '#/definitions/SportsResponseV1'
         '401':
           description: Unauthorized
           schema:
@@ -1175,6 +1233,7 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/LinesErrorResponse'
+      deprecated: true
   /v3/sports:
     get:
       tags:
@@ -1203,13 +1262,13 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/LinesErrorResponse'
-  /v2/leagues:
+  /v1/leagues:
     get:
       tags:
         - Others
-      summary: Get Leagues - v2
+      summary: Get Leagues - v1
       description: Returns all sports leagues with the status whether they currently have lines or not.
-      operationId: Leagues_V2_Get
+      operationId: Leagues_V1_Get
       consumes: []
       produces:
         - application/json
@@ -1223,7 +1282,45 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Leagues'
+            $ref: '#/definitions/LeaguesV1'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true    
+  /v3/leagues:
+    get:
+      tags:
+        - Others
+      summary: Get Leagues - v3
+      description: Returns all sports leagues with the status whether they currently have lines or not.
+      operationId: Leagues_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          description: Sport id for which the leagues are requested.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LeaguesV3'
         '400':
           description: BadRequest
           schema:
@@ -1537,7 +1634,7 @@ definitions:
         format: double
         description: Exchange rate to USD.
         example: 3.6738
-  FixturesResponse:
+  FixturesResponseV1:
     type: object
     properties:
       sportId:
@@ -1552,8 +1649,102 @@ definitions:
         type: array
         description: Contains a list of Leagues.
         items:
-          $ref: '#/definitions/FixturesLeague'
-  FixturesLeague:
+          $ref: '#/definitions/FixturesLeagueV1'
+  FixturesLeagueV1:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: League ID.
+      events:
+        type: array
+        description: Contains a list of events.
+        items:
+          $ref: '#/definitions/FixtureV1'
+  FixtureV1:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Event id.
+      starts:
+        type: string
+        format: date-time
+        description: Start time of the event in UTC.
+      home:
+        type: string
+        description: Home team name.
+      away:
+        type: string
+        description: Away team name.
+      rotNum:
+        type: string
+        description: Team1 rotation number. Please note that in the next version of /fixtures, rotNum property will be decomissioned. ParentId can be used instead to group the related events.
+      liveStatus:
+        type: integer
+        format: int32
+        description: |
+          Indicates live status of the event. 
+          
+          0 = No live betting will be offered on this event, 
+          1 = Live betting event, 
+          2 = Live betting will be offered on this event
+        enum:
+          - 0
+          - 1
+          - 2
+      homePitcher:
+        type: string
+        description: Home team pitcher. Only for Baseball.
+      awayPitcher:
+        type: string
+        description: Away team pitcher. Only for Baseball.
+      status:
+        type: string
+        description: |
+        
+          Status of the event. 
+          
+          O = This is the starting status of a game. It means that the lines are open for betting, 
+          H = This status indicates that the lines are temporarily unavailable for betting, 
+          I = This status indicates that one or more lines have a red circle (lower maximum bet amount)
+        enum:
+          - O
+          - H
+          - I
+      parlayRestriction:
+        type: integer
+        format: int32
+        description: |
+        
+          Parlay status of the event. 
+          
+          0 = Allowed to parlay, without restrictions, 
+          1 = Not allowed to parlay this event, 
+          2 = Allowed to parlay with the restrictions. You can not have more than one leg from the same event in the parlay. All events with the same rotation number are treated as same event.
+        enum:
+          - 0
+          - 1
+          - 2
+  FixturesResponseV3:
+    type: object
+    properties:
+      sportId:
+        type: integer
+        format: int32
+        description: Same as requested sport Id.
+      last:
+        type: integer
+        format: int64
+        description: Use this value for the subsequent requests for since query parameter to get just the changes since previous response.
+      league:
+        type: array
+        description: Contains a list of Leagues.
+        items:
+          $ref: '#/definitions/FixturesLeagueV3'
+  FixturesLeagueV3:
     type: object
     properties:
       id:
@@ -1567,8 +1758,8 @@ definitions:
         type: array
         description: Contains a list of events.
         items:
-          $ref: '#/definitions/Fixture'
-  Fixture:
+          $ref: '#/definitions/FixtureV3'
+  FixtureV3:
     type: object
     properties:
       id:
@@ -1644,7 +1835,7 @@ definitions:
       resultingUnit:   
         type: string
         description: | 
-          Specifies based on what the event will be resulted, e.g. Corners, Bookings 
+          Specifies based on what the event will be resulted, e.g. Corners, Bookings
   SettledFixturesSport:
     type: object
     properties:
@@ -1814,15 +2005,42 @@ definitions:
         type: integer
         format: int32
         description: Elapsed minutes
-  Leagues:
+  LeaguesV1:
     type: object
     properties:
       leagues:
         type: array
         description: Leagues container
         items:
-          $ref: '#/definitions/League'
-  League:
+          $ref: '#/definitions/LeagueV1'
+  LeagueV1:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: League Id.
+      name:
+        type: string
+        description: Name of the league.
+      homeTeamType:
+        type: string
+        description: Specifies whether the home team is team1 or team2. You need this information to place a bet.
+      hasOfferings:
+        type: boolean
+        description: Whether the league currently has events or specials.
+      allowRoundRobins:
+        type: boolean
+        description: Specifies whether you can place parlay round robins on events in this league.
+  LeaguesV3:
+    type: object
+    properties:
+      leagues:
+        type: array
+        description: Leagues container
+        items:
+          $ref: '#/definitions/LeagueV3'
+  LeagueV3:
     type: object
     properties:
       id:
@@ -2767,15 +2985,15 @@ definitions:
       team2TotalShortDescription:
         type: string
         description: Short description for Team2 Totals
-  SportsResponse:
+  SportsResponseV1:
     type: object
     properties:
       sports:
         type: array
         description: Sports container.
         items:
-          $ref: '#/definitions/Sport'
-  Sport:
+          $ref: '#/definitions/SportV1'
+  SportV1:
     type: object
     properties:
       id:
