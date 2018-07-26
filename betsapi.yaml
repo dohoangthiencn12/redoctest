@@ -493,7 +493,7 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
-  /v3/bets:
+  /v3/betstest:
     get:
       tags:
         - Get Bets
