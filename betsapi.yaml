@@ -65,18 +65,18 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
       deprecated: true
-  /v2/bets/straight:
+  /v3/bets/straight:
     post:
       tags:
         - Place Bets
-      summary: Place straight bet  - v2
+      summary: Place straight bet  - v3
       description: | 
            Place straight bet (SPREAD, MONEYLINE, TOTAL_POINTS, TEAM_TOTAL_POINTS).
       
            Please note when the status is PENDING_ACCEPTANCE and if the live delay was applied, the response will not have betId. Client would have to call /bets by uniqueRequestId to check the status if the bet was ACCEPTED.
            
            For more details please see [Betting on Events with Live Delay](https://www.pinnacle.com/en/api/manual#livedelaybetting)
-      operationId: Bets_StraightV2
+      operationId: Bets_StraightV3
       consumes:
         - application/json
       produces:
@@ -92,7 +92,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/PlaceBetResponseV2'
+            $ref: '#/definitions/PlaceBetResponseV3'
         '400':
           description: BadRequest
           schema:
@@ -900,7 +900,7 @@ definitions:
           - NO_API_ACCESS
       message:
         type: string
-  PlaceBetResponseV2:
+  PlaceBetResponseV3:
     type: object
     properties:
       status:
