@@ -493,80 +493,112 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
-  /v3/betstest:
+    
+   /v2/bets/settled:
     get:
       tags:
-        - Get Bets
-      summary: Get Bets - v3
+        - Get Bets Settled
+      summary: Get Bets Settled - v2
       description: |
-          Returns bets. 
+          Returns bets settled.
           
           
-          ### Get running bets by time range:
+          ### Get settled bets settled by time range:
+            
           ```
-          https://api.pinnacle.com/v3/bets?betlist=RUNNING&fromDate=2017-11-21T00:00:00Z&toDate=2017-11-29T00:00:00Z
+          https://api.pinnacle.com/v2/bets/settled?fromDate=2015-12-28T00:00:00Z&toDate=2015-12-29T00:00:00Z
           ```
-          Running bets are queried by *placedAt* date time
+          Settled bets are queried by *settledAt* date time
+          https://api.pinnacle.com/v2/bets/settled?fromDate=2017-11-20T00:00:00Z&toDate=2017-11-23T00:00:00Z
+          
+          
+      operationId: Bets_GetBetsSettledV2
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: eventId
+          in: query
+          description: Event identification
+          required: false
+          type: integer
+          format: int64
+        - name: fromDate
+          in: query
+          description: |
+            Start date of the requested period. Required when betlist parameter is submitted. Start date can be up to 30 days in the past. Expected format is ISO8601 - can be set to just date or date and time.
+          required: false
+          type: string
+        - name: toDate
+          in: query
+          description: |
+            End date of the requested period. Required when betlist parameter is submitted. Expected format is ISO8601 - can be set to just date or date and time.  toDate value is exclusive, meaning it cannot be equal to fromDate.
+          required: false
+          type: string
+        deprecated: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GetBetsByTypeResponse'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ErrorResponseWithErrorRef'
+   
+   /v3/bets/settled:
+    get:
+      tags:
+        - Get Bets Settled
+      summary: Get Bets Settled - v3
+      description: |
+          Returns bets settled.
           
           
           ### Get settled bets by time range:
             
           ```
-          https://api.pinnacle.com/v3/bets?betlist=SETTLED&fromDate=2015-12-28T00:00:00Z&toDate=2015-12-29T00:00:00Z
+          https://api.pinnacle.com/v3/bets/settled?fromDate=2015-12-28T00:00:00Z&toDate=2015-12-29T00:00:00Z
           ```
           Settled bets are queried by *settledAt* date time
-          https://api.pinnacle.com/v3/bets?betlist=SETTLED&fromDate=2017-11-20T00:00:00Z&toDate=2017-11-23T00:00:00Z
+          https://api.pinnacle.com/v3/bets/settled?fromDate=2017-11-20T00:00:00Z&toDate=2017-11-23T00:00:00Z
           
-          
-          ### Get settled cancelled bets by time range:
-            
-          ```
-          https://api.pinnacle.com/v3/bets?betList=SETTLED&fromDate=2018-03-01&toDate=2018-03-28&betStatuses=CANCELLED
-          ```
-          
-
-          ### Get bets by bet ids:
-          
-          ```
-          https://api.pinnacle.com/v3/bets?betIds=775856112,775856113,775856114
-          ```
           
           ### Get bets by uniqueRequestIds:
           
           ```
-          https://api.pinnacle.com/v3/bets?uniqueRequestIds=62335222-dae4-479a-8c05-46440ccdd3bb,42335222-dae4-479a-8c05-46440ccdd3bb
+          https://api.pinnacle.com/v3/bets/settled?uniqueRequestIds=62335222-dae4-479a-8c05-46440ccdd3bb,42335222-dae4-479a-8c05-46440ccdd3bb
           ```
           
-      operationId: Bets_GetBetsByTypeV3
+      operationId: Bets_GetBetsSettledV3
       consumes: []
       produces:
         - application/json
       parameters:
-        - name: betlist
+        - name: eventId
           in: query
-          description: 'Type of bet list to return. Not needed when betids is submitted.'
+          description: Event identification
           required: false
-          type: string
-          enum:
-            - SETTLED
-            - RUNNING
-            - ALL
-        - name: betStatuses
+          type: integer
+          format: int64
+        - name: specialId
           in: query
-          description: 'Type of bet statuse to return. This works only in conjustion with betlist, as additional filter.'
+          description: Id of the special.
           required: false
-          type: array
-          items:
-            type: string
-            enum:
-            - WON
-            - LOSE 
-            - CANCELLED 
-            - REFUNDED 
-            - NOT_ACCEPTED 
-            - ACCEPTED 
-            - PENDING_ACCEPTANCE
-          collectionFormat: csv
+          type: integer
+          format: int64
         - name: fromDate
           in: query
           description: |
@@ -600,15 +632,6 @@ paths:
           required: false
           type: integer
           default: 0  
-        - name: betids
-          in: query
-          description: 'A comma separated list of bet ids. When betids is submitted, no other parameter is necessary. Maximum is 100 ids. Works for all non settled bets and all bets settled in the last 30 days.'
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int64
-          collectionFormat: csv
         - name: uniqueRequestIds
           in: query
           description: |
@@ -644,7 +667,8 @@ paths:
         '500':
           description: InternalServerError
           schema:
-            $ref: '#/definitions/ErrorResponseWithErrorRef'    
+            $ref: '#/definitions/ErrorResponseWithErrorRef'
+            
   /v1/bets/betting-status:
     get:
       tags:
