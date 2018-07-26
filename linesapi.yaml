@@ -605,8 +605,8 @@ paths:
                 - id: 0
                   specials:
                     - status: 0
-                    - settlementId: 0
-                    - settledAt: '2017-10-11T15:05:50.996671Z'
+                      settlementId: 0
+                      settledAt: '2017-10-11T15:05:50.996671Z'
         '400':
           description: BadRequest
           schema:
@@ -669,8 +669,8 @@ paths:
                 - id: 0
                   specials:
                     - status: 0
-                    - settlementId: 0
-                    - settledAt: '2017-10-11T15:05:50.996671Z'
+                      settlementId: 0
+                      settledAt: '2017-10-11T15:05:50.996671Z'
                       cancellationReason:
                         code: string
                         details:
