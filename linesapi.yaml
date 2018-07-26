@@ -427,7 +427,7 @@ paths:
       parameters:
         - name: sportId
           in: query
-          description: The sport id to retrieve the fixutres for.
+          description: Id of the sport for which to retrieve the settled.
           required: true
           type: integer
           format: int32
@@ -497,7 +497,7 @@ paths:
         - name: sportId
           in: query
           required: true
-          description: The sport id to retrieve the fixutres for.
+          description: Id of the sport for which to retrieve the settled.
           type: integer
           format: int32
         - name: leagueIds
@@ -757,6 +757,76 @@ paths:
           description: To retrieve ONLY live odds set the value to 1 (isLive=1). Otherwise response will have all odds.
           required: false
           type: boolean
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OddsResponseV1'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true
+  /v3/odds:
+    get:
+      tags:
+        - Odds
+      summary: Get Straight Odds - v3
+      description: Returns straight odds for all non-settled events. Please note that it is possible that the event is in Get Fixtures response but not in Get Odds. This happens when the odds are not currently available for wagering.
+      operationId: Odds_Straight_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          description: The sportid for which to retrieve the odds.
+          required: true
+          type: integer
+          format: int32
+        - name: leagueIds
+          in: query
+          description: The leagueIds array may contain a list of comma separated league ids.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int32
+          collectionFormat: multi
+        - name: oddsFormat
+          in: query
+          description: Format in which we return the odds. Default is American. [American, Decimal, HongKong, Indonesian, Malay]
+          required: false
+          type: string
+          enum:
+            - American
+            - Decimal
+            - HongKong
+            - Indonesian
+            - Malay
+        - name: since
+          in: query
+          description: This is used to receive incremental updates. Use the value of last from previous odds response. When since parameter is not provided, the odds are delayed up to 1 min to encourage the use of the parameter. Please note that when using since parameter you will get in the response ONLY changed periods. If a period did not have any changes it will not be in the response.
+          required: false
+          type: integer
+          format: int64
+        - name: isLive
+          in: query
+          description: To retrieve ONLY live odds set the value to 1 (isLive=1). Otherwise response will have all odds.
+          required: false
+          type: boolean
         - name: eventIds
           in: query
           description: Filter by EventIds
@@ -775,11 +845,23 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/OddsResponse'
+            $ref: '#/definitions/OddsResponseV3'
         '400':
           description: BadRequest
           schema:
             $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
   /v1/odds/parlay:
     get:
       tags:
@@ -787,6 +869,76 @@ paths:
       summary: Get Parlay Odds - v1
       description: Returns parlay odds for all non-settled events. Please note that it is possible that the event is in Get Fixtures response but notin Get Odds. This happens when the odds are not currently available for wagering.
       operationId: Odds_Parlays_V1_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          description: The sportid for which to retrieve the odds.
+          required: true
+          type: integer
+          format: int32
+        - name: leagueIds
+          in: query
+          description: The leagueIds array may contain a list of comma separated league ids.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int32
+          collectionFormat: multi
+        - name: oddsFormat
+          in: query
+          description: Format in which we return the odds. Default is American. [American, Decimal, HongKong, Indonesian, Malay]
+          required: false
+          type: string
+          enum:
+            - American
+            - Decimal
+            - HongKong
+            - Indonesian
+            - Malay
+        - name: since
+          in: query
+          description: This is used to receive incremental updates. Use the value of last from previous odds response. When since parameter is not provided, the odds are delayed up to 1 min to encourage the use of the parameter. Please note that when using since parameter you will get in the response ONLY changed periods. If a period didn’t have any changes it will not be in the response.
+          required: false
+          type: integer
+          format: int64
+        - name: isLive
+          in: query
+          description: To retrieve ONLY live odds set the value to 1 (isLive=1). Otherwise response will have all odds.
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ParlayOddsResponseV1'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true
+  /v3/odds/parlay:
+    get:
+      tags:
+        - Odds
+      summary: Get Parlay Odds - v3
+      description: Returns parlay odds for all non-settled events. Please note that it is possible that the event is in Get Fixtures response but notin Get Odds. This happens when the odds are not currently available for wagering.
+      operationId: Odds_Parlays_V3_Get
       consumes: []
       produces:
         - application/json
@@ -841,7 +993,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/ParlayOddsResponse'
+            $ref: '#/definitions/ParlayOddsResponseV3'
         '400':
           description: BadRequest
           schema:
@@ -2694,7 +2846,7 @@ definitions:
     required: 
       - legId
       - status
-  OddsResponse:
+  OddsResponseV1:
     type: object
     properties:
       sportId:
@@ -2709,8 +2861,8 @@ definitions:
         type: array
         description: Contains a list of Leagues.
         items:
-          $ref: '#/definitions/OddsLeague'
-  OddsLeague:
+          $ref: '#/definitions/OddsLeagueV1'
+  OddsLeagueV1:
     type: object
     properties:
       id:
@@ -2721,8 +2873,8 @@ definitions:
         type: array
         description: Contains a list of events.
         items:
-          $ref: '#/definitions/OddsEvent'
-  OddsEvent:
+          $ref: '#/definitions/OddsEventV1'
+  OddsEventV1:
     type: object
     properties:
       id:
@@ -2749,8 +2901,184 @@ definitions:
         type: array
         description: Contains a list of periods.
         items:
-          $ref: '#/definitions/OddsPeriod'
-  OddsPeriod:
+          $ref: '#/definitions/OddsPeriodV1'
+  OddsPeriodV1:
+    type: object
+    properties:
+      lineId:
+        type: integer
+        format: int64
+        description: Line Id.
+      number:
+        type: integer
+        format: int32
+        description: This represents the period of the match. For example, for soccer we have  0 (Game), 1 (1st Half) & 2 (2nd Half)
+      cutoff:
+        type: string
+        format: date-time
+        description: Period’s wagering cut-off date in UTC.
+      maxSpread:
+        type: number
+        format: double
+        description: Maximum spread bet. Only in straight odds response.
+      maxMoneyline:
+        type: number
+        format: double
+        description: Maximum moneyline bet. Only in straight odds response.
+      maxTotal:
+        type: number
+        format: double
+        description: Maximum total points bet. Only in straight odds response.
+      maxTeamTotal:
+        type: number
+        format: double
+        description: Maximum team total points bet. Only in straight odds response.
+      spreads:
+        type: array
+        description: Container for spread odds.
+        items:
+          $ref: '#/definitions/OddsSpreadV1'
+      moneyline:
+        $ref: '#/definitions/OddsMoneylineV1'
+      totals:
+        type: array
+        description: Container for team total points.
+        items:
+          $ref: '#/definitions/OddsTotalV1'
+      teamTotal:
+        $ref: '#/definitions/OddsTeamTotalsV1'
+  OddsSpreadV1:
+    type: object
+    properties:
+      altLineId:
+        type: integer
+        format: int64
+        description: This is present only if it’s alternative line.
+      hdp:
+        type: number
+        format: double
+        description: Home team handicap.
+      home:
+        type: number
+        format: double
+        description: Home team price.
+      away:
+        type: number
+        format: double
+        description: Away team price.
+  OddsMoneylineV1:
+    type: object
+    properties:
+      home:
+        type: number
+        format: double
+        description: Away team price
+      away:
+        type: number
+        format: double
+        description: Away team price.
+      draw:
+        type: number
+        format: double
+        description: Draw price. This is present only for events we offer price for draw.
+  OddsTotalV1:
+    type: object
+    properties:
+      altLineId:
+        type: integer
+        format: int64
+        description: This is present only if it’s alternative line.
+      points:
+        type: number
+        format: double
+        description: Total points.
+      over:
+        type: number
+        format: double
+        description: Over price.
+      under:
+        type: number
+        format: double
+        description: Under price.
+  OddsTeamTotalsV1:
+    type: object
+    properties:
+      home:
+        $ref: '#/definitions/OddsTeamTotalV1'
+      away:
+        $ref: '#/definitions/OddsTeamTotalV1'
+  OddsTeamTotalV1:
+    type: object
+    properties:
+      points:
+        type: number
+        format: double
+        description: Total points.
+      over:
+        type: number
+        format: double
+        description: Over price.
+      under:
+        type: number
+        format: double
+        description: Under price.
+  OddsResponseV3:
+    type: object
+    properties:
+      sportId:
+        type: integer
+        format: int32
+        description: Same as requested sport Id.
+      last:
+        type: integer
+        format: int64
+        description: Use this value for the subsequent requests for since query parameter to get just the changes since previous response.
+      leagues:
+        type: array
+        description: Contains a list of Leagues.
+        items:
+          $ref: '#/definitions/OddsLeagueV3'
+  OddsLeagueV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: League Id.
+      events:
+        type: array
+        description: Contains a list of events.
+        items:
+          $ref: '#/definitions/OddsEventV3'
+  OddsEventV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Event Id.
+      awayScore:
+        type: number
+        format: double
+        description: Away team score. Only for live soccer events.
+      homeScore:
+        type: number
+        format: double
+        description: Home team score. Only for live soccer events.
+      awayRedCards:
+        type: integer
+        format: int32
+        description: Away team red cards. Only for live soccer events.
+      homeRedCards:
+        type: integer
+        format: int32
+        description: Home team red cards. Only for live soccer events.
+      periods:
+        type: array
+        description: Contains a list of periods.
+        items:
+          $ref: '#/definitions/OddsPeriodV3'
+  OddsPeriodV3:
     type: object
     properties:
       lineId:
@@ -2792,17 +3120,17 @@ definitions:
         type: array
         description: Container for spread odds.
         items:
-          $ref: '#/definitions/OddsSpread'
+          $ref: '#/definitions/OddsSpreadV3'
       moneyline:
-        $ref: '#/definitions/OddsMoneyline'
+        $ref: '#/definitions/OddsMoneylineV3'
       totals:
         type: array
         description: Container for team total points.
         items:
-          $ref: '#/definitions/OddsTotal'
+          $ref: '#/definitions/OddsTotalV3'
       teamTotal:
-        $ref: '#/definitions/OddsTeamTotals'
-  OddsSpread:
+        $ref: '#/definitions/OddsTeamTotalsV3'
+  OddsSpreadV3:
     type: object
     properties:
       altLineId:
@@ -2821,7 +3149,7 @@ definitions:
         type: number
         format: double
         description: Away team price.
-  OddsMoneyline:
+  OddsMoneylineV3:
     type: object
     properties:
       home:
@@ -2836,7 +3164,7 @@ definitions:
         type: number
         format: double
         description: Draw price. This is present only for events we offer price for draw.
-  OddsTotal:
+  OddsTotalV3:
     type: object
     properties:
       altLineId:
@@ -2855,14 +3183,14 @@ definitions:
         type: number
         format: double
         description: Under price.
-  OddsTeamTotals:
+  OddsTeamTotalsV3:
     type: object
     properties:
       home:
-        $ref: '#/definitions/OddsTeamTotal'
+        $ref: '#/definitions/OddsTeamTotalV3'
       away:
-        $ref: '#/definitions/OddsTeamTotal'
-  OddsTeamTotal:
+        $ref: '#/definitions/OddsTeamTotalV3'
+  OddsTeamTotalV3:
     type: object
     properties:
       points:
@@ -2877,7 +3205,7 @@ definitions:
         type: number
         format: double
         description: Under price.
-  ParlayOddsResponse:
+  ParlayOddsResponseV1:
     type: object
     properties:
       sportId:
@@ -2892,12 +3220,12 @@ definitions:
         type: array
         description: Contains a list of Leagues.
         items:
-          $ref: '#/definitions/ParlayOddsLeague'
+          $ref: '#/definitions/ParlayOddsLeagueV1'
     required:
       - sportId
       - last
       - leagues
-  ParlayOddsLeague:
+  ParlayOddsLeagueV1:
     type: object
     properties:
       id:
@@ -2908,11 +3236,11 @@ definitions:
         type: array
         description: Contains a list of events.
         items:
-          $ref: '#/definitions/ParlayOddsEvent'
+          $ref: '#/definitions/ParlayOddsEventV1'
     required:
       - id
       - events
-  ParlayOddsEvent:
+  ParlayOddsEventV1:
     type: object
     properties:
       id:
@@ -2939,11 +3267,199 @@ definitions:
         type: array
         description: Contains a list of periods.
         items:
-          $ref: '#/definitions/ParlayOddsPeriod'
+          $ref: '#/definitions/ParlayOddsPeriodV1'
     required:
       - id
       - periods
-  ParlayOddsPeriod:
+  ParlayOddsPeriodV1:
+    type: object
+    properties:
+      lineId:
+        type: integer
+        format: int64
+        description: Line Id.
+      number:
+        type: integer
+        format: int32
+        description: This represents the period of the match. For example, for soccer we have 0 (Game), 1 (1st Half) & 2 (2nd Half)
+      cutoff:
+        type: string
+        format: date-time
+        description: Period’s wagering cut-off date in UTC.
+      maxSpread:
+        type: number
+        format: double
+        description: Maximum spread bet. Only in straight odds response.
+      maxMoneyline:
+        type: number
+        format: double
+        description: Maximum moneyline bet. Only in straight odds response.
+      maxTotal:
+        type: number
+        format: double
+        description: Maximum total points bet. Only in straight odds response.
+      maxTeamTotal:
+        type: number
+        format: double
+        description: Maximum team total points bet. Only in straight odds response.
+      spreads:
+        type: array
+        description: Container for spread odds.
+        items:
+          $ref: '#/definitions/ParlayOddsSpreadV1'
+      moneyline:
+        $ref: '#/definitions/ParlayOddsMoneylineV1'
+      totals:
+        type: array
+        description: Container for team total points.
+        items:
+          $ref: '#/definitions/ParlayOddsTotalV1'
+      teamTotal:
+        $ref: '#/definitions/ParlayOddsTeamTotalsV1'
+    required:
+      - lineId
+      - number
+      - cutoff
+  ParlayOddsSpreadV1:
+    type: object
+    properties:
+      altLineId:
+        type: integer
+        format: int64
+        description: This is present only if it’s alternative line.
+      hdp:
+        type: number
+        format: double
+        description: Home team handicap.
+      home:
+        type: number
+        format: double
+        description: Home team price.
+      away:
+        type: number
+        format: double
+        description: Away team price.
+    required:
+      - hdp
+      - home
+      - away
+  ParlayOddsMoneylineV1:
+    type: object
+    properties:
+      home:
+        type: number
+        format: double
+        description: Away team price
+      away:
+        type: number
+        format: double
+        description: Away team price.
+      draw:
+        type: number
+        format: double
+        description: Draw price. This is present only for events we offer price for draw.
+    required:
+      - home
+      - away
+  ParlayOddsTotalV1:
+    $ref: '#/definitions/ParlayOddsTotalsV1'
+  ParlayOddsTeamTotalsV1:
+    type: object
+    properties:
+      away:
+        $ref: '#/definitions/ParlayOddsTotalsV1'
+      home:
+        $ref: '#/definitions/ParlayOddsTotalsV1'
+  ParlayOddsTotalsV1:
+    type: object
+    properties:
+      altLineId:
+        type: number
+        format: int64
+        description: Line Id for the alternate line. This is present only if it’s alternative line.
+      points:
+        type: number
+        format: double
+        description: Total points.
+      over:
+        type: number
+        format: double
+        description: Over price.
+      under:
+        type: number
+        format: double
+        description: Under price.
+    required:
+      - points
+      - over
+      - under
+  ParlayOddsResponseV3:
+    type: object
+    properties:
+      sportId:
+        type: integer
+        format: int32
+        description: Same as requested sport Id.
+      last:
+        type: integer
+        format: int64
+        description: Use this value for the subsequent requests for since query parameter to get just the changes since previous response.
+      leagues:
+        type: array
+        description: Contains a list of Leagues.
+        items:
+          $ref: '#/definitions/ParlayOddsLeagueV3'
+    required:
+      - sportId
+      - last
+      - leagues
+  ParlayOddsLeagueV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: League Id.
+      events:
+        type: array
+        description: Contains a list of events.
+        items:
+          $ref: '#/definitions/ParlayOddsEventV3'
+    required:
+      - id
+      - events
+  ParlayOddsEventV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Event Id.
+      awayScore:
+        type: number
+        format: double
+        description: Away team score. Only for live soccer events.
+      homeScore:
+        type: number
+        format: double
+        description: Home team score. Only for live soccer events.
+      awayRedCards:
+        type: integer
+        format: int32
+        description: Away team red cards. Only for live soccer events.
+      homeRedCards:
+        type: integer
+        format: int32
+        description: Home team red cards. Only for live soccer events.
+      periods:
+        type: array
+        description: Contains a list of periods.
+        items:
+          $ref: '#/definitions/ParlayOddsPeriodV3'
+    required:
+      - id
+      - periods
+  ParlayOddsPeriodV3:
     type: object
     properties:
       lineId:
@@ -2985,21 +3501,21 @@ definitions:
         type: array
         description: Container for spread odds.
         items:
-          $ref: '#/definitions/ParlayOddsSpread'
+          $ref: '#/definitions/ParlayOddsSpreadV3'
       moneyline:
-        $ref: '#/definitions/ParlayOddsMoneyline'
+        $ref: '#/definitions/ParlayOddsMoneylineV3'
       totals:
         type: array
         description: Container for team total points.
         items:
-          $ref: '#/definitions/ParlayOddsTotal'
+          $ref: '#/definitions/ParlayOddsTotalV3'
       teamTotal:
-        $ref: '#/definitions/ParlayOddsTeamTotals'
+        $ref: '#/definitions/ParlayOddsTeamTotalsV3'
     required:
       - lineId
       - number
       - cutoff
-  ParlayOddsSpread:
+  ParlayOddsSpreadV3:
     type: object
     properties:
       altLineId:
@@ -3022,7 +3538,7 @@ definitions:
       - hdp
       - home
       - away
-  ParlayOddsMoneyline:
+  ParlayOddsMoneylineV3:
     type: object
     properties:
       home:
@@ -3040,16 +3556,16 @@ definitions:
     required:
       - home
       - away
-  ParlayOddsTotal:
-    $ref: '#/definitions/ParlayOddsTotals'
-  ParlayOddsTeamTotals:
+  ParlayOddsTotalV3:
+    $ref: '#/definitions/ParlayOddsTotalsV3'
+  ParlayOddsTeamTotalsV3:
     type: object
     properties:
       away:
-        $ref: '#/definitions/ParlayOddsTotals'
+        $ref: '#/definitions/ParlayOddsTotalsV3'
       home:
-        $ref: '#/definitions/ParlayOddsTotals'
-  ParlayOddsTotals:
+        $ref: '#/definitions/ParlayOddsTotalsV3'
+  ParlayOddsTotalsV3:
     type: object
     properties:
       altLineId:
