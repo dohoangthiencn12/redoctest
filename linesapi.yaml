@@ -80,6 +80,7 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true
   /v3/fixtures:
     get:
       tags:
@@ -441,12 +442,78 @@ paths:
           in: query
           required: false
           type: integer
-          format: int32
+          format: int64
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/SettledFixturesSport'
+            $ref: '#/definitions/SettledFixturesSportV1'
+          examples:
+            application/json:
+              sportId: 0
+              last: 0
+              leagues:
+                - id: 0
+                  events:
+                    - id: 0
+                      periods:
+                        - number: 0
+                          status: 0
+                          settlementId: 0
+                          settledAt: '2017-09-03T18:21:22.3846289-07:00'
+                          team1Score: 0
+                          team2Score: 0
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true
+  /v3/fixtures/settled:
+    get:
+      tags:
+        - Fixtures
+      summary: Get Settled Fixtures - v3
+      description: Returns fixtures settled in the last 24 hours for the given sport.
+      operationId: Fixtures_Settled_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          required: true
+          type: integer
+          format: int32
+        - name: leagueIds
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int32
+          collectionFormat: multi
+        - name: since
+          in: query
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SettledFixturesSportV3'
           examples:
             application/json:
               sportId: 0
@@ -529,7 +596,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/SettledSpecialsResponse'
+            $ref: '#/definitions/SettledSpecialsResponseV1'
           examples:
             application/json:
               sportId: 0
@@ -537,6 +604,72 @@ paths:
               leagues:
                 - id: 0
                   specials:
+                    - status: 0
+                    - settlementId: 0
+                    - settledAt: '2017-10-11T15:05:50.996671Z'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ExtendedErrorResponse'
+      deprecated: true
+  /v3/fixtures/special/settled:
+    get:
+      tags:
+        - Fixtures
+      summary: Get Settled Special Fixtures - v3
+      description: Returns all specials which are settled in the last 24 hours for the given Sport.
+      operationId: Fixtures_Specials_Settled_V3_Get
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sportId
+          in: query
+          description: Id of the sport for which to retrieve the settled specials.
+          required: true
+          type: integer
+          format: int32
+        - name: leagueIds
+          in: query
+          description: Array of leagueIds. This is optional parameter.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int32
+          collectionFormat: multi
+        - name: since
+          in: query
+          description: This is used to receive incremental updates. Use the value of last from previous response.
+          required: false
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SettledSpecialsResponseV3'
+          examples:
+            application/json:
+              sportId: 0
+              last: 0
+              leagues:
+                - id: 0
+                  specials:
+                    - status: 0
+                    - settlementId: 0
                     - settledAt: '2017-10-11T15:05:50.996671Z'
                       cancellationReason:
                         code: string
@@ -1836,7 +1969,7 @@ definitions:
         type: string
         description: | 
           Specifies based on what the event will be resulted, e.g. Corners, Bookings
-  SettledFixturesSport:
+  SettledFixturesSportV1:
     type: object
     properties:
       sportId:
@@ -1851,8 +1984,8 @@ definitions:
         type: array
         description: Contains a list of Leagues.
         items:
-          $ref: '#/definitions/SettledFixturesLeague'
-  SettledFixturesLeague:
+          $ref: '#/definitions/SettledFixturesLeagueV1'
+  SettledFixturesLeagueV1:
     type: object
     properties:
       id:
@@ -1863,8 +1996,8 @@ definitions:
         type: array
         description: Contains a list of events.
         items:
-          $ref: '#/definitions/SettledFixturesEvent'
-  SettledFixturesEvent:
+          $ref: '#/definitions/SettledFixturesEventV1'
+  SettledFixturesEventV1:
     type: object
     properties:
       id:
@@ -1875,8 +2008,88 @@ definitions:
         type: array
         description: Contains a list of periods.
         items:
-          $ref: '#/definitions/SettledFixturesPeriod'
-  SettledFixturesPeriod:
+          $ref: '#/definitions/SettledFixturesPeriodV1'
+  SettledFixturesPeriodV1:
+    type: object
+    properties:
+      number:
+        type: integer
+        format: int32
+        description: This represents the period of the match. For example, for soccer we have 0 (Game), 1 (1st Half) & 2 (2nd Half)
+      status:
+        type: integer
+        format: int32
+        description: |
+          Period settlement status. 
+          
+          1 = Event period is settled, 
+          2 = Event period is re-settled, 
+          3 = Event period is cancelled, 
+          4 = Event period is re-settled as cancelled, 
+          5 = Event is deleted
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+      settlementId:
+        type: integer
+        format: int64
+        description: Unique id of the settlement. In case of a re-settlement, a new settlementId and settledAt will be generated.
+      settledAt:
+        type: string
+        format: date-time
+        description: Date and time in UTC when the period was settled.
+      team1Score:
+        type: integer
+        format: int32
+        description: Team1 score.
+      team2Score:
+        type: integer
+        format: int32
+        description: Team2 score.
+  SettledFixturesSportV3:
+    type: object
+    properties:
+      sportId:
+        type: integer
+        format: int32
+        description: Same as requested sport Id.
+      last:
+        type: integer
+        format: int64
+        description: Use this value for the subsequent requests for since query parameter to get just the changes since previous response.
+      leagues:
+        type: array
+        description: Contains a list of Leagues.
+        items:
+          $ref: '#/definitions/SettledFixturesLeagueV3'
+  SettledFixturesLeagueV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: League Id.
+      events:
+        type: array
+        description: Contains a list of events.
+        items:
+          $ref: '#/definitions/SettledFixturesEventV3'
+  SettledFixturesEventV3:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Event Id.
+      periods:
+        type: array
+        description: Contains a list of periods.
+        items:
+          $ref: '#/definitions/SettledFixturesPeriodV3'
+  SettledFixturesPeriodV3:
     type: object
     properties:
       number:
@@ -3230,7 +3443,7 @@ definitions:
         format: int32
         description: Rotation Number.
         type: integer
-  SettledSpecialsResponse:
+  SettledSpecialsResponseV1:
     description: Response dto for SettledSpecials request
     type: object
     properties:
@@ -3246,8 +3459,8 @@ definitions:
         description: List of Leagues.
         type: array
         items:
-          $ref: '#/definitions/SettledSpecialsLeague'
-  SettledSpecialsLeague:
+          $ref: '#/definitions/SettledSpecialsLeagueV1'
+  SettledSpecialsLeagueV1:
     description: League Dto to hold all settled specials for the league
     type: object
     properties:
@@ -3259,8 +3472,58 @@ definitions:
         description: A collection of Settled Specials
         type: array
         items:
-          $ref: '#/definitions/SettledSpecial'
-  SettledSpecial:
+          $ref: '#/definitions/SettledSpecialV1'
+  SettledSpecialV1:
+    description: Settled Special
+    type: object
+    properties:
+      id:
+        format: int64
+        description: Id for the Settled Special
+        type: integer
+      status:
+        format: int32
+        description: Status of the settled special.
+        type: integer
+      settlementId:
+        format: int64
+        description: Id for the Settled Special
+        type: integer
+      settledAt:
+        format: date-time
+        description: Settled DateTime
+        type: string
+  SettledSpecialsResponseV3:
+    description: Response dto for SettledSpecials request
+    type: object
+    properties:
+      sportId:
+        format: int32
+        description: Id of a sport for which to retrieve the odds.
+        type: integer
+      last:
+        format: int64
+        description: Last index for the settled fixture
+        type: integer
+      leagues:
+        description: List of Leagues.
+        type: array
+        items:
+          $ref: '#/definitions/SettledSpecialsLeagueV3'
+  SettledSpecialsLeagueV3:
+    description: League Dto to hold all settled specials for the league
+    type: object
+    properties:
+      id:
+        format: int32
+        description: League Id.
+        type: integer
+      specials:
+        description: A collection of Settled Specials
+        type: array
+        items:
+          $ref: '#/definitions/SettledSpecialV3'
+  SettledSpecialV3:
     description: Settled Special
     type: object
     properties:
