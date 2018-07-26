@@ -206,7 +206,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/MultiBetResponse[SpecialBetResponse]'
+            $ref: '#/definitions/SpecialBetResponse'
         '400':
           description: BadRequest
           schema:
