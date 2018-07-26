@@ -201,6 +201,45 @@ paths:
           description: The SpecialBet request.
           required: true
           schema:
+            $ref: '#/definitions/SpecialBetRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MultiBetResponse[SpecialBetResponse]'
+        '400':
+          description: BadRequest
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: InternalServerError
+          schema:
+            $ref: '#/definitions/ErrorResponseWithErrorRef'
+      deprecated: true
+  /v3/bets/special:
+    post:
+      tags:
+        - Place Bets
+      summary: Place specials bet - v3
+      operationId: Bets_SpecialV3
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: The SpecialBet request.
+          required: true
+          schema:
             $ref: '#/definitions/MultiBetRequest[SpecialBetRequest]'
       responses:
         '200':
