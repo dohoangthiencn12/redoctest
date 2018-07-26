@@ -493,11 +493,10 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
-    
    /v2/bets/settled:
     get:
       tags:
-        - Get Bets Settled
+        - Get Bets
       summary: Get Bets Settled - v2
       description: |
           Returns bets settled.
@@ -561,7 +560,7 @@ paths:
    /v3/bets/settled:
     get:
       tags:
-        - Get Bets Settled
+        - Get Bets
       summary: Get Bets Settled - v3
       description: |
           Returns bets settled.
