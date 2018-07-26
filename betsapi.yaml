@@ -493,7 +493,8 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
-   /v2/bets/settled:
+            
+  /v2/bets/settled:
     get:
       tags:
         - Get Bets
@@ -534,7 +535,7 @@ paths:
             End date of the requested period. Required when betlist parameter is submitted. Expected format is ISO8601 - can be set to just date or date and time.  toDate value is exclusive, meaning it cannot be equal to fromDate.
           required: false
           type: string
-        deprecated: true
+      deprecated: true
       responses:
         '200':
           description: OK
@@ -557,7 +558,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
    
-   /v3/bets/settled:
+  /v3/bets/settled:
     get:
       tags:
         - Get Bets
