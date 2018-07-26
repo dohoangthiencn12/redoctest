@@ -1110,8 +1110,7 @@ paths:
                 - id: 487
                   specials:
                     - id: 1
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 1
                           lineId: 1001
@@ -1122,8 +1121,7 @@ paths:
                           price: -198
                           handicap: null
                     - id: 2
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 3
                           lineId: 1003
@@ -1134,8 +1132,7 @@ paths:
                           price: -196
                           handicap: null
                     - id: 3
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 5
                           lineId: 1005
@@ -1146,8 +1143,7 @@ paths:
                           price: -194
                           handicap: null
                     - id: 4
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 7
                           lineId: 1007
@@ -1158,8 +1154,7 @@ paths:
                           price: -192
                           handicap: null
                     - id: 5
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 9
                           lineId: 1009
@@ -1170,8 +1165,7 @@ paths:
                           price: -190
                           handicap: null
                     - id: 6
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 11
                           lineId: 1011
@@ -1182,8 +1176,7 @@ paths:
                           price: -188
                           handicap: null
                     - id: 7
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 13
                           lineId: 1013
@@ -1194,8 +1187,7 @@ paths:
                           price: -186
                           handicap: null
                     - id: 8
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 15
                           lineId: 1015
@@ -1206,8 +1198,7 @@ paths:
                           price: -184
                           handicap: null
                     - id: 9
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 17
                           lineId: 1017
@@ -1228,8 +1219,7 @@ paths:
                 - id: 578
                   specials:
                     - id: 10
-                      minRisk: 1
-                      maxRisk: 100
+                      maxBet: 100
                       contestantLines:
                         - id: 21
                           lineId: 1021
@@ -4148,14 +4138,6 @@ definitions:
         format: int64
         description: Special Id.
         type: integer
-      minRisk:
-        format: double
-        description: Minimum risk amount.
-        type: number
-      maxRisk:
-        format: double
-        description: Maximum risk amount.
-        type: number
       maxBet:
         format: double
         description: Maximum risk amount.
@@ -4165,14 +4147,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/SpecialOddsContestantLine'
-      minWin:
-        format: double
-        description: Minimum win amount.
-        type: number
-      maxWin:
-        format: double
-        description: Maximum win amount.
-        type: number
   SpecialOddsContestantLine:
     type: object
     properties:
