@@ -63,18 +63,18 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
       deprecated: true
-  /v3/bets/straight:
+  /v2/bets/place:
     post:
       tags:
         - Place Bets
-      summary: Place straight bet  - v3
+      summary: Place straight bet  - v2
       description: | 
            Place straight bet (SPREAD, MONEYLINE, TOTAL_POINTS, TEAM_TOTAL_POINTS).
       
            Please note when the status is PENDING_ACCEPTANCE and if the live delay was applied, the response will not have betId. Client would have to call /bets by uniqueRequestId to check the status if the bet was ACCEPTED.
            
            For more details please see [Betting on Events with Live Delay](https://www.pinnacle.com/en/api/manual#livedelaybetting)
-      operationId: Bets_StraightV3
+      operationId: Bets_StraightV2
       consumes:
         - application/json
       produces:
@@ -183,51 +183,12 @@ paths:
           description: InternalServerError
           schema:
             $ref: '#/definitions/ErrorResponseWithErrorRef'
-  /v1/bets/special:
+  /v2/bets/special:
     post:
       tags:
         - Place Bets
-      summary: Place specials bet - v1
-      operationId: Bets_Special
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: request
-          description: The SpecialBet request.
-          required: true
-          schema:
-            $ref: '#/definitions/SpecialBetRequest'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/SpecialBetResponse'
-        '400':
-          description: BadRequest
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '403':
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        '500':
-          description: InternalServerError
-          schema:
-            $ref: '#/definitions/ErrorResponseWithErrorRef'
-      deprecated: true
-  /v3/bets/special:
-    post:
-      tags:
-        - Place Bets
-      summary: Place specials bet - v3
-      operationId: Bets_SpecialV3
+      summary: Place specials bet - v2
+      operationId: Bets_SpecialV2
       consumes:
         - application/json
       produces:
