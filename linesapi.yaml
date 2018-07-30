@@ -610,7 +610,8 @@ paths:
               leagues:
                 - id: 0
                   specials:
-                    - status: 0
+                    - id: 0
+                      status: 0
                       settlementId: 0
                       settledAt: '2017-10-11T15:05:50.996671Z'
         '400':
@@ -1121,61 +1122,6 @@ paths:
                           lineId: 1002
                           price: -198
                           handicap: null
-                    - id: 2
-                      maxBet: 100
-                      contestantLines:
-                        - id: 3
-                          lineId: 1003
-                          price: -197
-                          handicap: null
-                        - id: 4
-                          lineId: 1004
-                          price: -196
-                          handicap: null
-                    - id: 3
-                      maxBet: 100
-                      contestantLines:
-                        - id: 5
-                          lineId: 1005
-                          price: -195
-                          handicap: null
-                        - id: 6
-                          lineId: 1006
-                          price: -194
-                          handicap: null
-                    - id: 4
-                      maxBet: 100
-                      contestantLines:
-                        - id: 7
-                          lineId: 1007
-                          price: -193
-                          handicap: null
-                        - id: 8
-                          lineId: 1008
-                          price: -192
-                          handicap: null
-                    - id: 5
-                      maxBet: 100
-                      contestantLines:
-                        - id: 9
-                          lineId: 1009
-                          price: -191
-                          handicap: null
-                        - id: 10
-                          lineId: 1010
-                          price: -190
-                          handicap: null
-                    - id: 6
-                      maxBet: 100
-                      contestantLines:
-                        - id: 11
-                          lineId: 1011
-                          price: -189
-                          handicap: null
-                        - id: 12
-                          lineId: 1012
-                          price: -188
-                          handicap: null
                     - id: 7
                       maxBet: 100
                       contestantLines:
@@ -1186,36 +1132,6 @@ paths:
                         - id: 14
                           lineId: 1014
                           price: -186
-                          handicap: null
-                    - id: 8
-                      maxBet: 100
-                      contestantLines:
-                        - id: 15
-                          lineId: 1015
-                          price: -185
-                          handicap: null
-                        - id: 16
-                          lineId: 1016
-                          price: -184
-                          handicap: null
-                    - id: 9
-                      maxBet: 100
-                      contestantLines:
-                        - id: 17
-                          lineId: 1017
-                          price: -183
-                          handicap: null
-                        - id: 18
-                          lineId: 1018
-                          price: -182
-                          handicap: null
-                        - id: 19
-                          lineId: 1019
-                          price: -181
-                          handicap: null
-                        - id: 20
-                          lineId: 1020
-                          price: -180
                           handicap: null
                 - id: 578
                   specials:
@@ -4139,7 +4055,7 @@ definitions:
         format: int64
         description: Special Id.
         type: integer
-      maxBet:
+      maxRisk:
         format: double
         description: Maximum risk amount.
         type: number
@@ -4166,8 +4082,4 @@ definitions:
       handicap:
         format: double
         description: 'A number indicating the spread, over/under etc.'
-        type: number
-      vig:
-        format: double
-        description: Vig Percentage
         type: number
