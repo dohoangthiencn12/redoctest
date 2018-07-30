@@ -2581,6 +2581,7 @@ definitions:
       pageSize:
         type: integer 
         description: Page size. Default is 1000.
+        example: 1000
       fromRecord:
         type: integer 
         description: Starting record number of the result set. Records start at zero
