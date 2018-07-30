@@ -674,7 +674,8 @@ paths:
               leagues:
                 - id: 0
                   specials:
-                    - status: 0
+                    - id: 0
+                      status: 0
                       settlementId: 0
                       settledAt: '2017-10-11T15:05:50.996671Z'
                       cancellationReason:
