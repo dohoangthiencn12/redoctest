@@ -44,8 +44,6 @@ paths:
       responses:
         '200':
           description: OK
-          examples:
-            application/json: '{"status":"ACCEPTED","errorCode":null,"betId":761875754,"uniqueRequestId":"0865697a-6e4e-49dc-b77a-190e71a57bc8","betterLineWasAccepted":false,"price":-147.0}'
           schema:
             $ref: '#/definitions/PlaceBetResponse'
         '400':
